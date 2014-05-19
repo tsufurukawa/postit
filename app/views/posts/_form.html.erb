@@ -1,40 +1,36 @@
-<h5>Pure HTML Form</h5>
-<form action='/posts' method='POST'>
-  Title: <input type='text' name='my_title'>
-  <br/>
-  <input type='submit' class='btn btn-primary'>
-</form>
+<!-- Validation Error Message -->
+<%= render 'shared/errors', obj: @post %>
 
-<h5>Rails form helpers</h5>
-<%= form_tag '/posts' do %>
-  <%= label_tag :title %>
-  <%= text_field_tag :title %>
-  <br/>
-  <%= submit_tag "Create Post", class: 'btn btn-primary'%>
-<% end %>
+<!-- If New Object: Post '/posts' -> posts#create -->
+<!-- If Existing Object: PATCH '/posts/:id' -> posts#update -->
+<div class="well">
+  <%= form_for @post do |f| %> 
+    <div class="control-group"> 
+      <%= f.label :title  %>
+      <%= f.text_field :title %>
+    <div/>
+    <div class="control-group">
+      <%= f.label :url %>  
+      <%= f.text_field :url %>
+    <div/>
+    <div class="control-group">
+      <%= f.label :description %>
+      <%= f.text_area :description, rows: 5 %>
+    <div/>
 
-<h5>Rails model-backed form halpers</h5>
-
-
-<% if @post.errors.any? %>
-  <div class='alert alert-error'>
-    <h5>There were some errors:</h5>
-    <ul>
-      <% @post.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
+    <div class="control-group">
+      <%= f.label "Categories" %>
+      <%= f.collection_check_boxes :category_ids, Category.all, :id, :name do |cb| %>
+        <% cb.label(class: "checkbox inline") {cb.check_box(class: "checkbox") + cb.text } %>
       <% end %>
-    </ul>
-  </div>
-<% end %>
+    </div>
 
+    <div class="control-group">
+      <%= f.label "Categories" %>
+      <%= f.select("category_ids", Category.all.collect { |c| [c.name, c.id] }, { include_blank: false }, { multiple: 'multiple' }) %>
+    </div>
 
-<%= form_for @post do |f| %>
-  <%= f.label :title %>
-  <%= f.text_field :title %>
-  <br/>
-
-  <%= f.label :url %>
-  <%= f.text_field :url %>
-  <br/>
-  <%= f.submit "Create Post", class: "btn btn-primary" %>
-<% end %>
+    <%= f.submit(@post.new_record? ? "Create Post" : 'Update Post', class: "btn btn-primary") %>
+  
+  <% end %>
+</div>

@@ -5,7 +5,7 @@ class PostsController < ApplicationController
     @posts = Post.all
   end
 
-  def show 
+  def show
     @comment = Comment.new
   end
 
@@ -15,22 +15,22 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
+    @post.creator = User.first #TODO: change once we have authentication
 
     if @post.save
-      flash[:notice] = "Your post was created."
+      flash[:notice] = "You successfully created a new post"
       redirect_to posts_path
-    else # validation error
-      render :new
+    else
+      render :new 
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @post.update(post_params)
-      flash[:notice] = "The post was updated"
-      redirect_to posts_path
+      flash[:notice] = "You successfully updated your post"
+      redirect_to post_path(@post)
     else
       render :edit
     end
@@ -39,11 +39,10 @@ class PostsController < ApplicationController
   private 
 
   def post_params
-    params.require(:post).permit!
+    params.require(:post).permit(:title, :url, :description, category_ids: []) 
   end
 
   def set_post
     @post = Post.find(params[:id])
   end
-
 end

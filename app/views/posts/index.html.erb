@@ -1,36 +1,5 @@
 <%= render 'shared/content_title', title: 'All Posts' %>
 
 <% @posts.each do |post| %>
-  <div class="row">
-    <div class="span8 well">
-
-      <%= render post.categories %> <!-- When passing in a collection (array) of objects (or even just one object like @category), it assumes there's a folder called /categories and there's a partial called '_category.html.erb'... so '/categories/_category.html.erb'. 
-      This also passes in the 'category' object one by one to that partial which is referenced inside a local variable called 'category' - and we can thus use this local variable (which contains the object) inside the partial, as for example 'category.name'-->
-
-      <!-- Line 7 is equivalent to 
-      <% post.categories do |category| %>
-        <%= render 'categories/category', category: category %>
-      <% end %>
-      -->
-
-
-      <!-- Add link for editing posts-->
-      <h4><%= link_to 'Edit', edit_post_path(post) %></h4>
-
-
-
-   
-      <h4><%= link_to post.title, post.url %></h4>
-      <p><%= post.description %></p>
-      <p>
-        <span class="quiet">posted by</span> <%= post.creator.username %>
-        <small>at</small> <%= post.created_at %>
-      </p>
-      <small>
-        <span>
-          <%= link_to("#{post.comments.size} comments", post_path(post)) %>
-        </span>
-      </small>
-    </div>
-  </div>
+  <%= render 'post', post: post %>
 <% end %>
