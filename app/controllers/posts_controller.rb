@@ -1,9 +1,10 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update]
-  before_action :require_user, except: [:show, :index]
+  before_action :set_post, only: [:show, :edit, :update, :vote]
+  before_action :require_user, except: [:show, :index, :vote]
+  before_action :require_same_user, only: [:edit, :update]
 
   def index
-    @posts = Post.all
+    @posts = Post.all.sort_by{ |x| x.total_votes }.reverse
   end
 
   def show
@@ -16,7 +17,7 @@ class PostsController < ApplicationController
 
   def create
     @post = Post.new(post_params)
-    @post.creator = current_user #TODO: change once we have authentication
+    @post.creator = current_user 
 
     if @post.save
       flash[:notice] = "You successfully created a new post"
@@ -37,6 +38,18 @@ class PostsController < ApplicationController
     end
   end
 
+  def vote
+    vote = Vote.create(vote: params[:vote], creator: current_user, voteable: @post)
+
+    if vote.valid?
+      flash[:notice] = "You voted!!"
+    else
+      flash[:error] = "You can only vote on a post once."
+    end
+    
+    redirect_to :back
+  end
+
   private 
 
   def post_params
@@ -45,5 +58,12 @@ class PostsController < ApplicationController
 
   def set_post
     @post = Post.find(params[:id])
+  end
+
+  def require_same_user
+    if current_user != @post.creator
+      flash[:error] = "You 're not allowed to do that."
+      redirect_to root_path
+    end
   end
 end
