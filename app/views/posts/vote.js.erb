@@ -1,0 +1,8 @@
+// Handling Ajax Response for Post
+$('.vote-error').remove();
+
+<% if @vote.valid? %>
+  $('#post_<%= @post.slug %>_votes').html('<%= pluralize(@post.total_votes, "vote") %>');
+<% else %>
+  $('#post_<%= @post.slug %>_votes').closest('.row').before('<p class="alert alert-error vote-error">You can only vote once</p>');
+<% end %>

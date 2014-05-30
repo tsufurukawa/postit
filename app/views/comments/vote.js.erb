@@ -1,0 +1,8 @@
+// Handling Ajax Response for Comment
+$('.vote-error').remove();
+
+<% if @vote.valid? %>
+  $('#comment_<%= @vote.voteable.id %>_votes').html('<%= pluralize(@vote.voteable.total_votes, "vote") %>');
+<% else %>
+  $('#comment_<%= @vote.voteable.id %>_votes').closest('.row').before('<p class="alert alert-error vote-error">You can only vote once</p>');
+<% end %>

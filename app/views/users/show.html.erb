@@ -5,11 +5,11 @@
     <dt>Username:</dt>
     <dd><%= @user.username %></dd>
     <dt>Time zone:</dt>
-    <dd></dd>
+    <dd><%= @user.time_zone %></dd>
     <dt>Two factor auth:</dt>
-    <dd></dd>
+    <dd><%= @user.phone.blank? ? "Not Activated" : "Activated" %></dd>
     <dt>Phone:</dt>
-    <dd></dd>
+    <dd><%= @user.phone %></dd>
   </dl>
 </div>
 
